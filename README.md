@@ -1,2 +1,4 @@
-# mytdo
-mytdo: verrrry simple task manager written in bash
+# mytd
+mytd: verrrry simple task manager written in bash
+
+

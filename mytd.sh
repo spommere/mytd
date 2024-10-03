@@ -1,7 +1,5 @@
 #!/bin/bash
 
-ver="mytd 0.2 Copyright (c) 2024, Oracle and/or its affiliates. All rights reserved."
-
 TASKS_DIR="./tasks"
 . ./env
 

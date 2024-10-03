@@ -1,5 +1,7 @@
 #! /bin/sh
 
+ver="mytd 0.3 Copyright (c) 2024 All rights reserved."
+
 showmenu=once
 shownmenu=0
 #showmenu=always

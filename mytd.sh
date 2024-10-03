@@ -1,7 +1,8 @@
 #!/bin/bash
 
-TASKS_DIR="./tasks"
-. ./env
+dir=`dirname $0`
+TASKS_DIR="$dir/tasks"
+. $dir/env
 
 mkdir -p "$TASKS_DIR"
 
@@ -26,7 +27,7 @@ create_task() {
     local project_name=$1
     local ndays=$2
     shift;shift
-    local task_name=`echo "$*"|cut -c1-52`
+    local task_name=`echo "$*"|cut -c1-52|sed "s/\//-/g"`
     local due_date=$(/bin/date -d "+${ndays} days" +%Y-%m-%d)
     local task_id=$(/bin/date +%s)
     local task_file="$TASKS_DIR/$project_name/$task_id.task"
@@ -125,7 +126,7 @@ list_tasks() {
       taskfiles=`find "$TASKS_DIR" -name "*.task" -exec grep -l "Status: $taskstatus" {} \;`
       if [[ -n "$taskfiles" ]]
       then
-        printf "%-16s %-60s %-12s %-12s %-6s\n" "task_id" "taskdesc" "created" "due" "status"
+        printf "%-16s %-12s %-6s %-60s %-12s\n" "task_id" "due" "status" "taskdesc" "created"
       else
         continue
       fi
@@ -138,8 +139,8 @@ list_tasks() {
         taskdesc=`grep ^Task $taskfile|cut -f2-20 -d" "`
         taskdue=`grep ^Due $taskfile|awk '{print $2}'`
         taskstatus=`grep ^Status $taskfile|awk '{print $2}'`
-        printf "%-16s %-60s %-12s %-12s %-6s\n" "$task_id" "$taskdesc" "$creation_date" "$taskdue" "$taskstatus"
-      done | sort -k1
+        printf "%-16s %-12s %-6s %-60s %-12s\n" "$task_id" "$taskdue" "$taskstatus" "$taskdesc" "$creation_date"
+      done | sort -k2
       echo ""
     done
 }
@@ -152,7 +153,7 @@ while true; do
     echo "Selected project: '$project_name'"
     if [[ ("$showmenu" = "once" && $shownmenu -eq 0) || "$showmenu" = "always"  ]]
     then
-      cat ./functions
+      cat $dir/functions
       shownmenu=1
     fi
     read -p "Choose an option: " option
@@ -240,12 +241,11 @@ while true; do
             echo kthxbye
             exit 0
             ;;
-        r)   ./$0
-             exit 0
-             ;;
+        r)  ./$0
+            exit 0
+            ;;
         *)
-             echo "Invalid option. Please try again."
-             #break
-             ;;
+            echo "Invalid option. Please try again."
+            ;;
     esac
 done

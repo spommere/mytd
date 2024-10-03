@@ -1,0 +1,9 @@
+ct - Create Task
+cft - Create Follow-up Task
+et - Edit Task
+uts - Update Task Status
+utd - Update Due Date +N days
+lt - List Open Tasks
+lta - List All Tasks
+dt - Delete Task
+e - Exit

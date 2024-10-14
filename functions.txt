@@ -1,0 +1,15 @@
+c - Create Task ( c <task description> )
+cf - Close task_id and Create Follow-up Task ( cf <task id> )
+e - Edit Task ( e <task id> )
+cl - Set Task Status to 80 ( cl <task id> )
+wt - Set Task Status to 30 ( wt <task id> )
+wip/reopen - Set Task Status to 11 ( wip/reopen <task id> )
+ecl|eop|ewt - Edit and Close Task accordingly ( ecl|eop|ewt <task_id> )
+ud - Update Due Date +N days ( ud <task id> <DueInNDays> )
+ub - Update Bug number ( ub <task id> <bug number> )
+s - Show Task File ( s <task_id> )
+d - Delete Task ( d <task id> )
+l - List Open Tasks ( l )
+la - List All Tasks ( la )
+h - Help
+x - Exit

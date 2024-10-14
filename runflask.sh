@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # Get the directory of the script
 script_path=$(realpath "$0")
@@ -8,7 +8,6 @@ cd $script_dir
 ver=`cat $script_dir/version.txt`
 sed -i "s#<title>.*#<title>$ver</title>#g" $script_dir/templates/index.html
 sed -i "s#<h1>.*#<h1>$ver</h1>#g" $script_dir/templates/index.html
-export https_proxy=http://www-proxy.us.oracle.com:80
 export PYTHONUSERBASE=$script_dir
 export PYTHONPATH=$PYTHONUSERBASE
 myenv=$script_dir/myenv
@@ -31,7 +30,7 @@ then
       wget https://bootstrap.pypa.io/get-pip.py
     else
       echo "Some other Python version than 3.6 or 3.7 ? `echo $pyver`"
-      exit 1
+      wget https://bootstrap.pypa.io/get-pip.py
     fi
   fi
   echo "getting get-pip.py for $pyver"

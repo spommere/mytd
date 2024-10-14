@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Management App (mytd 0.5 Copyright (c) 2024 All rights reserved.)</title>
+    <style>
+        /* Adds non-breaking spaces */
+        .tabbed-label::after {
+            content: "\00a0\00a0\00a0\00a0\00a0\00a0\00a0";
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <h1>Task Management App (mytd 0.5 Copyright (c) 2024 All rights reserved.)</h1>
+    <button onclick="startScript()">Start Script</button>
+    <form id="combinedForm" onsubmit="handleSubmit(event)">
+        <label for="input">Choose an option:</label>
+        <input type="text" id="input" name="input" oninput="checkInput()">
+        <div id="contentDiv" style="display: none;">
+            <label for="content" class="tabbed-label">Enter content:</label>
+            <textarea id="content" name="content"></textarea>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <pre id="output"></pre>
+
+    <script>
+        const socket = io();
+
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+
+        socket.on('new_output', function(data) {
+            const outputElement = document.getElementById('output');
+            outputElement.innerText += data.output;
+        });
+
+        function startScript() {
+            fetch('/start_script', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('output').innerText = data.status + '\n';
+                });
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            const inputElement = document.getElementById('input');
+            const input = inputElement.value;
+            const contentElement = document.getElementById('content');
+            const content = contentElement.value;
+
+            fetch('/send_input', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ input: input })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('output').innerText = ''; // Clear the output
+                    document.getElementById('output').innerText += data.status + '\n';
+                    inputElement.value = ''; // Clear the input field
+
+                    if (input.startsWith('e')) {
+                        fetch('/submit_content', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({ content: content })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                document.getElementById('output').innerText += data.status + '\n';
+                                contentElement.value = ''; // Clear the textarea
+                            });
+                    }
+                });
+        }
+
+        function checkInput() {
+            const inputElement = document.getElementById('input');
+            const contentDiv = document.getElementById('contentDiv');
+            if (inputElement.value.startsWith('e')) {
+                contentDiv.style.display = 'block';
+            } else {
+                contentDiv.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+

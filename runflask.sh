@@ -6,8 +6,15 @@ script_dir=$(dirname "$script_path")
 cd $script_dir
 
 ver=`cat $script_dir/version.txt`
-sed -i "s#<title>.*#<title>$ver</title>#g" $script_dir/templates/index.html
-sed -i "s#<h1>.*#<h1>$ver</h1>#g" $script_dir/templates/index.html
+if [[ ! `grep "$ver" $script_dir/templates/index.html` ]]
+then
+  echo "Updating version in $script_dir/templates/index.html"
+  echo "Current version: $ver"
+  sed -i "s#<title>.*#<title>$ver</title>#g" $script_dir/templates/index.html
+  sed -i "s#<h1>.*#<h1>$ver</h1>#g" $script_dir/templates/index.html
+fi
+echo "Current version: $ver"
+export https_proxy=http://www-proxy.us.oracle.com:80
 export PYTHONUSERBASE=$script_dir
 export PYTHONPATH=$PYTHONUSERBASE
 myenv=$script_dir/myenv
@@ -30,7 +37,7 @@ then
       wget https://bootstrap.pypa.io/get-pip.py
     else
       echo "Some other Python version than 3.6 or 3.7 ? `echo $pyver`"
-      wget https://bootstrap.pypa.io/get-pip.py
+      exit 1
     fi
   fi
   echo "getting get-pip.py for $pyver"

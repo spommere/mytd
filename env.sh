@@ -1,20 +1,39 @@
-#! /bin/sh
+#! /bin/bash
 
 ver=`cat $script_dir/version.txt`
+
 EDITOR="vi +$"
 default_mytdprog=mytd.sh
 flask_mytdprog=mytd_flask.sh
 
+default_project_name=Work
+alltaskstati="11 30 80"
+status_wip=11
+status_wait=30
+status_closed=80
+default_task_status=$status_wip
+
 justentered=1
+bkfreq=10
 
 # list tasks after each non-list command
-listtasks=0
+#listtasks=0
 listtasks=1
 
 # formating headers and other things
 #formatting=0
 formatting=1
 
+# weekends
+#weekends=1 # weekend tasks will be due on the same day
+weekends=0 # weekend tasks will be due on the following Monday
+
+# now you can overwrite previous settings in a module-specifc env file
+MODULE=oracle
+#MODULE=other
+. ${script_dir}/env_$MODULE.sh
+
+# Don't make changes below this line, if possible.
 set_formatting()
 {
   if [[ $1 -eq 0 ]]
@@ -90,6 +109,18 @@ usageXtoY()
       done
       echo "$str"
     done
+    option=invalid
+  fi
+}
+
+usage0()
+{
+  c=$1
+  opt=$2
+  p1=${3:-parameter1}
+  if [ $c -ne 0 ]
+  then
+    echo "usage: $opt"
     option=invalid
   fi
 }
